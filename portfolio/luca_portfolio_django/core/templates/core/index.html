@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Luca Vigna - Portfolio</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="{% static 'core/styles.css' %}" rel="stylesheet"/>
+<meta content="{{ csrf_token }}" name="csrf-token"/></head>
+<body>
+<!-- Header -->
+<header>
+<nav>
+<div class="logo">:)</div>
+<ul class="nav-links">
+<li><a href="#inicio">Inicio</a></li>
+<li><a href="#sobre-mi">Sobre Mí</a></li>
+<li><a href="#proyectos">Proyectos</a></li>
+<li><a href="#contacto">Contacto</a></li>
+</ul>
+<button class="theme-toggle" onclick="toggleTheme()">🌓 Tema</button>
+</nav>
+</header>
+<!-- Main-->
+<main>
+<!-- Hero -->
+<div class="hero" id="inicio">
+<article class="hero-content">
+<h1>Luca Vigna</h1>
+<p>Estudiante de Informática &amp; Desarrollador Web</p>
+<div class="hero-buttons">
+<a class="cta-button" href="#sobre-mi">
+<i class="fas fa-user"></i>
+                        un poco de mi
+                    </a>
+<button class="cta-button" onclick="downloadCV()">
+<i class="fas fa-download"></i>
+                        Descargar CV
+                    </button>
+</div>
+</article>
+</div>
+<!-- Sobre Mí -->
+<section class="about" id="sobre-mi">
+<h2 class="section-title">Sobre Mí</h2>
+<div class="about-content">
+<aside class="about-info">
+<div class="info-grid">
+<div class="info-card">
+<h3>👤 Nombre</h3>
+<p>Luca Vigna</p>
+</div>
+<div class="info-card">
+<h3>🎯 Edad</h3>
+<p>16 Años</p>
+</div>
+<div class="info-card">
+<h3>📍 Residencia</h3>
+<p>San Telmo, CABA</p>
+</div>
+<div class="info-card">
+<h3>🎓 Ocupación</h3>
+<p>Estudiante en informática</p>
+</div>
+<div class="info-card">
+<h3>💡 Pasión</h3>
+<p>Programación y desarrollo web</p>
+</div>
+<div class="info-card">
+<h3>🚀 Objetivo</h3>
+<p>Desarrollador Full-Stack</p>
+</div>
+<div class="info-card">
+<h3>👑 Clash Royale</h3>
+<p>9000 copas</p>
+</div>
+<div class="info-card">
+<h3>🎮 Fortnite</h3>
+<p>Unreal</p>
+</div>
+</div>
+</aside>
+</div>
+<!-- Habilidades -->
+<div class="skills-subsection">
+<h3 class="subsection-title">Habilidades Técnicas</h3>
+<div class="skills-container-compact">
+<div class="skills-category-compact">
+<h4><i class="fas fa-code"></i> Lenguajes de Programación</h4>
+<div class="skills-grid-compact">
+<div class="skill-item-compact skill-qbasic">
+<i class="fas fa-file-code"></i>
+<span>QBasic</span>
+</div>
+<div class="skill-item-compact skill-python">
+<i class="fab fa-python"></i>
+<span>Python</span>
+</div>
+<div class="skill-item-compact skill-html">
+<i class="fab fa-html5"></i>
+<span>HTML</span>
+</div>
+<div class="skill-item-compact skill-css">
+<i class="fab fa-css3-alt"></i>
+<span>CSS</span>
+</div>
+</div>
+</div>
+<div class="skills-category-compact">
+<h4><i class="fas fa-tools"></i> Herramientas</h4>
+<div class="skills-grid-compact">
+<div class="skill-item-compact skill-git">
+<i class="fab fa-git-alt"></i>
+<span>Git</span>
+</div>
+<div class="skill-item-compact skill-pygame">
+<i class="fas fa-gamepad"></i>
+<span>Pygame</span>
+</div>
+<div class="skill-item-compact skill-tkinter">
+<i class="fas fa-window-maximize"></i>
+<span>Tkinter</span>
+</div>
+<div class="skill-item-compact skill-json">
+<i class="fas fa-code-branch"></i>
+<span>JSON</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Proyectos-->
+<section class="projects" id="proyectos">
+<h2 class="section-title">Mis Proyectos</h2>
+<article class="projects-grid">
+<div class="project-card">
+<div class="project-image">👾</div>
+<div class="project-content">
+<h3>Space Invaders</h3>
+<p>Recreación del clásico juego arcade Space Invaders desarrollado en Python utilizando la librería Pygame. El juego incluye mecánicas originales como movimiento de enemigos, disparos, puntuación y efectos visuales.</p>
+<div class="tech-stack">
+<span class="tech-tag">Python</span>
+<span class="tech-tag">Pygame</span>
+<span class="tech-tag">Game Development</span>
+</div>
+</div>
+</div>
+<div class="project-card">
+<div class="project-image">❓</div>
+<div class="project-content">
+<h3>Preguntados</h3>
+<p>Juego de preguntas y respuestas estilo Preguntados con múltiples categorías, sistema de puntuación y interfaz intuitiva. Incluye base de datos de preguntas y sistema de categorías diversas.</p>
+<div class="tech-stack">
+<span class="tech-tag">Python</span>
+<span class="tech-tag">Tkinter</span>
+<span class="tech-tag">Pygame</span>
+<span class="tech-tag">JSON</span>
+</div>
+</div>
+</div>
+</article>
+</section>
+<!-- Contacto -->
+<section class="contact" id="contacto">
+<h2 class="section-title">Contacto</h2>
+<article class="contact-container">
+<div class="contact-info">
+<h3>Mis Contactos</h3>
+<div class="contact-grid">
+<div class="contact-item" onclick="window.open('https://github.com/lucavigna', '_blank')">
+<div class="icon">🐙</div>
+<h4>GitHub</h4>
+<p>@lucavigna</p>
+</div>
+<div class="contact-item" onclick="window.open('https://instagram.com/lucavigna', '_blank')">
+<div class="icon">📸</div>
+<h4>Instagram</h4>
+<p>@lucavigna</p>
+</div>
+<div class="contact-item" onclick="window.open('tel:+541234567890', '_blank')">
+<div class="icon">📱</div>
+<h4>Teléfono</h4>
+<p>+54 11 2345-6789</p>
+</div>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- Footer -->
+<footer>
+<p>© Es mi portafolio, tengo los derechos reservados jajaja.</p>
+</footer>
+<script src="{% static 'core/script.js' %}"></script>
+</body>
+</html>
