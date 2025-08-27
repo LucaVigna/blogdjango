@@ -1,22 +1,156 @@
-{% extends "base.html" %}
+{% extends "blog/base.html" %}
+{% load static %}
 
-{% block page_title %}
-    <h2>Blog Posts</h2>
-{% endblock page_title %}
+{% block title %}Blog{% endblock %}
 
 {% block page_content %}
-    {% block posts %}
-        {% for post in posts %}
-            <h3><a href="{% url 'blog_detail' post.pk %}">{{ post.title }}</a></h3>
-            <small>
-                {{ post.created_on.date }} | Categories:
-                {% for category in post.categories.all %}
-                    <a href="{% url 'blog_category' category.name %}">
-                        {{ category.name }}
+<div class="blog-container">
+    <!-- Sidebar -->
+    <aside class="blog-sidebar">
+        <!-- Search -->
+        <div class="sidebar-widget search-widget">
+            <h3><i class="fas fa-search"></i> Buscar</h3>
+            <form class="search-form" method="GET">
+                <input type="text" name="q" placeholder="Buscar posts..." value="{{ request.GET.q }}">
+                <button type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Categories -->
+        {% if categories %}
+        <div class="sidebar-widget categories-widget">
+            <h3><i class="fas fa-folder"></i> Categorías</h3>
+            <ul class="categories-list">
+                {% for category in categories %}
+                <li>
+                    <a href="{% url 'blog:category' category.slug %}">
+                        <span class="category-name">{{ category.name }}</span>
+                        <span class="post-count">{{ category.post_set.count }}</span>
                     </a>
+                </li>
                 {% endfor %}
-            </small>
-            <p>{{ post.body | slice:":400" }}...</p>
-        {% endfor %}
-    {% endblock posts %}
-{% endblock page_content %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Recent Posts -->
+        <div class="sidebar-widget recent-widget">
+            <h3><i class="fas fa-clock"></i> Posts Recientes</h3>
+            <div class="recent-posts">
+                {% for post in posts|slice:":3" %}
+                <article class="recent-post">
+                    <h4>
+                        <a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a>
+                    </h4>
+                    <div class="recent-meta">
+                        <i class="fas fa-calendar"></i>
+                        <time>{{ post.created_at|date:"d M Y" }}</time>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Blog Content -->
+    <div class="blog-main">
+        {% if posts %}
+        <div class="posts-grid">
+            {% for post in posts %}
+            <article class="post-card">
+                {% if post.featured_image %}
+                <div class="post-image">
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                    <div class="post-overlay">
+                        <a href="{% url 'blog:post_detail' post.slug %}" class="read-more-btn">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="post-image-placeholder">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                {% endif %}
+
+                <div class="post-content">
+                    <div class="post-meta">
+                        <span class="post-category">
+                            <a href="{% url 'blog:category' post.category.slug %}">
+                                <i class="fas fa-tag"></i>
+                                {{ post.category.name }}
+                            </a>
+                        </span>
+                        <span class="post-date">
+                            <i class="fas fa-calendar"></i>
+                            <time>{{ post.created_at|date:"d M Y" }}</time>
+                        </span>
+                    </div>
+
+                    <h2 class="post-title">
+                        <a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a>
+                    </h2>
+
+                    <div class="post-excerpt">
+                        {% if post.excerpt %}
+                            {{ post.excerpt }}
+                        {% else %}
+                            {{ post.content|truncatewords:25 }}
+                        {% endif %}
+                    </div>
+
+                    <div class="post-footer">
+                        <div class="post-author">
+                            <i class="fas fa-user"></i>
+                            <span>{{ post.author.get_full_name|default:post.author.username }}</span>
+                        </div>
+                        <a href="{% url 'blog:post_detail' post.slug %}" class="read-more">
+                            Leer más <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="pagination-container">
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="pagination-btn">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                {% endif %}
+
+                <span class="pagination-info">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-btn">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="no-posts">
+            <i class="fas fa-inbox"></i>
+            <h3>No hay posts disponibles</h3>
+            <p>Aún no se han publicado posts en el blog.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
