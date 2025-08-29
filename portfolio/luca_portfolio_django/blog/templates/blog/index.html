@@ -4,49 +4,38 @@
 {% block title %}Blog{% endblock %}
 
 {% block page_content %}
-<div class="blog-container">
-    <!-- Sidebar -->
-    <aside class="blog-sidebar">
-        <!-- Search -->
-        <div class="sidebar-widget search-widget">
-            <h3><i class="fas fa-search"></i> Buscar</h3>
-            <form class="search-form" method="GET">
-                <input type="text" name="q" placeholder="Buscar posts..." value="{{ request.GET.q }}">
-                <button type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-        </div>
 
-        <!-- Categories -->
+
+<div class="blog-container">
+    <!-- Sidebar with portfolio styling -->
+    <aside class="blog-sidebar">
+        <!-- Categories with info-card styling -->
         {% if categories %}
-        <div class="sidebar-widget categories-widget">
-            <h3><i class="fas fa-folder"></i> Categorías</h3>
-            <ul class="categories-list">
+        <div class="sidebar-widget">
+            <h3>📂 Categorías</h3>
+            <div class="categories-grid">
                 {% for category in categories %}
-                <li>
-                    <a href="{% url 'blog:category' category.slug %}">
-                        <span class="category-name">{{ category.name }}</span>
-                        <span class="post-count">{{ category.post_set.count }}</span>
-                    </a>
-                </li>
+                <div class="info-card category-card" onclick="window.location.href='{% url 'blog:category' category.slug %}'">
+                    <h4>{{ category.name }}</h4>
+                    <p>{{ category.post_set.count }} post{{ category.post_set.count|pluralize }}</p>
+                </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
         {% endif %}
 
-        <!-- Recent Posts -->
-        <div class="sidebar-widget recent-widget">
-            <h3><i class="fas fa-clock"></i> Posts Recientes</h3>
-            <div class="recent-posts">
-                {% for post in posts|slice:":3" %}
-                <article class="recent-post">
+        <!-- Recent Posts - Limited to 2 -->
+        <div class="sidebar-widget">
+            <h3>⏰ Posts Recientes</h3>
+            <div class="recent-posts-list">
+                {% for post in posts|slice:":2" %}
+                <article class="recent-post-card" onclick="window.location.href='{% url 'blog:post_detail' post.slug %}'">
                     <h4>
                         <a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a>
                     </h4>
                     <div class="recent-meta">
-                        <i class="fas fa-calendar"></i>
-                        <time>{{ post.created_at|date:"d M Y" }}</time>
+                        <span><i class="fas fa-calendar"></i> {{ post.created_at|date:"d M Y" }}</span>
+                        <span><i class="fas fa-tag"></i> {{ post.category.name }}</span>
                     </div>
                 </article>
                 {% endfor %}
@@ -54,77 +43,73 @@
         </div>
     </aside>
 
-    <!-- Main Blog Content -->
+    <!-- Main Blog Content with projects styling -->
     <div class="blog-main">
         {% if posts %}
-        <div class="posts-grid">
+        <article class="blog-posts-grid">
             {% for post in posts %}
-            <article class="post-card">
-                {% if post.featured_image %}
+            <div class="blog-post-card">
+                <!-- Post Image -->
                 <div class="post-image">
-                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-                    <div class="post-overlay">
-                        <a href="{% url 'blog:post_detail' post.slug %}" class="read-more-btn">
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
+                    {% if post.featured_image %}
+                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                    {% else %}
+                        📄
+                    {% endif %}
                 </div>
-                {% else %}
-                <div class="post-image-placeholder">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                {% endif %}
-
+                
+                <!-- Post Content -->
                 <div class="post-content">
+                    <!-- Post Meta -->
                     <div class="post-meta">
-                        <span class="post-category">
-                            <a href="{% url 'blog:category' post.category.slug %}">
-                                <i class="fas fa-tag"></i>
+                        <div class="post-category">
+                            <a href="{% url 'blog:category' post.category.slug %}" class="tech-tag">
                                 {{ post.category.name }}
                             </a>
-                        </span>
-                        <span class="post-date">
+                        </div>
+                        <div class="post-date">
                             <i class="fas fa-calendar"></i>
-                            <time>{{ post.created_at|date:"d M Y" }}</time>
-                        </span>
+                            {{ post.created_at|date:"d M Y" }}
+                        </div>
                     </div>
 
-                    <h2 class="post-title">
+                    <h3>
                         <a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a>
-                    </h2>
+                    </h3>
 
-                    <div class="post-excerpt">
+                    <p>
                         {% if post.excerpt %}
                             {{ post.excerpt }}
                         {% else %}
-                            {{ post.content|truncatewords:25 }}
+                            {{ post.content|truncatewords:20 }}
                         {% endif %}
-                    </div>
+                    </p>
 
+                    <!-- Post Footer -->
                     <div class="post-footer">
                         <div class="post-author">
                             <i class="fas fa-user"></i>
-                            <span>{{ post.author.get_full_name|default:post.author.username }}</span>
+                            {{ post.author.get_full_name|default:post.author.username }}
                         </div>
                         <a href="{% url 'blog:post_detail' post.slug %}" class="read-more">
                             Leer más <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
-            </article>
+            </div>
             {% endfor %}
-        </div>
+        </article>
 
-        <!-- Pagination -->
+        <!-- Pagination with CTA button styling -->
         {% if page_obj.has_other_pages %}
         <div class="pagination-container">
-            <div class="pagination">
+            <div class="hero-buttons">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1" class="pagination-btn">
-                        <i class="fas fa-angle-double-left"></i>
+                    <a href="?page=1" class="cta-button">
+                        <i class="fas fa-angle-double-left"></i> Primera
                     </a>
-                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">
-                        <i class="fas fa-angle-left"></i>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="cta-button">
+                        <i class="fas fa-angle-left"></i> Anterior
                     </a>
                 {% endif %}
 
@@ -133,11 +118,11 @@
                 </span>
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">
-                        <i class="fas fa-angle-right"></i>
+                    <a href="?page={{ page_obj.next_page_number }}" class="cta-button">
+                        Siguiente <i class="fas fa-angle-right"></i>
                     </a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-btn">
-                        <i class="fas fa-angle-double-right"></i>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="cta-button">
+                        Última <i class="fas fa-angle-double-right"></i>
                     </a>
                 {% endif %}
             </div>
@@ -145,10 +130,17 @@
         {% endif %}
 
         {% else %}
-        <div class="no-posts">
-            <i class="fas fa-inbox"></i>
-            <h3>No hay posts disponibles</h3>
-            <p>Aún no se han publicado posts en el blog.</p>
+        <!-- No Posts with portfolio styling -->
+        <div class="no-posts-section">
+            <div class="no-posts-content">
+                <h1>🔭 No hay posts disponibles</h1>
+                <p>Aún no se han publicado posts en el blog.</p>
+                <div class="hero-buttons">
+                    <a href="{% url 'core:home' %}" class="cta-button">
+                        <i class="fas fa-home"></i> Ir al Inicio
+                    </a>
+                </div>
+            </div>
         </div>
         {% endif %}
     </div>

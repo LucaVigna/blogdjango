@@ -3,91 +3,58 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 
-{% block hero_title %}{{ post.title }}{% endblock %}
-{% block hero_description %}{{ post.excerpt|default:post.content|truncatewords:20 }}{% endblock %}
-
-{% block breadcrumb %}
-<a href="{% url 'blog:index' %}">Blog</a>
-<span class="breadcrumb-separator">
-    <i class="fas fa-chevron-right"></i>
-</span>
-<span>{{ post.title|truncatewords:3 }}</span>
-{% endblock %}
-
 {% block page_content %}
+
 <div class="post-detail-container">
-    <article class="post-detail">
-        <!-- Post Header -->
-        <header class="post-header">
+    <!-- Post Header Card (Project Card Style) -->
+    <article class="project-card post-header-card">
+        <!-- Featured Image -->
+        <div class="project-image">
             {% if post.featured_image %}
-            <div class="post-featured-image">
                 <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
-            </div>
+            {% else %}
+                📄
             {% endif %}
-
-            <div class="post-meta-detailed">
-                <div class="meta-row">
-                    <div class="meta-item">
-                        <i class="fas fa-user"></i>
-                        <span>Por {{ post.author.get_full_name|default:post.author.username }}</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fas fa-calendar"></i>
-                        <time>{{ post.created_at|date:"d M Y" }}</time>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fas fa-tag"></i>
-                        <a href="{% url 'blog:category' post.category.slug %}">{{ post.category.name }}</a>
-                    </div>
-                </div>
-                
-                {% if post.updated_at != post.created_at %}
-                <div class="meta-row">
-                    <div class="meta-item updated">
-                        <i class="fas fa-edit"></i>
-                        <span>Actualizado el {{ post.updated_at|date:"d M Y" }}</span>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-        </header>
-
-        <!-- Post Content -->
-        <div class="post-body">
-            {{ post.content|linebreaks }}
         </div>
 
-        <!-- Post Footer -->
-        <footer class="post-footer">
-            <div class="post-actions">
-                <a href="{% url 'blog:index' %}" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    Volver al Blog
-                </a>
+        <!-- Post Info Content -->
+        <div class="project-content">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.excerpt|default:post.content|truncatewords:10 }}</p>
+
+            <!-- Post Meta with Tech Stack Style -->
+            <div class="tech-stack post-meta-tags">
+                <span class="tech-tag">
+                    <i class="fas fa-user"></i>
+                    {{ post.author.get_full_name|default:post.author.username }}
+                </span>
+                <span class="tech-tag">
+                    <i class="fas fa-calendar"></i>
+                    {{ post.created_at|date:"d M Y" }}
+                </span>
+                <span class="tech-tag">
+                    <i class="fas fa-tag"></i>
+                    <a href="{% url 'blog:category' post.category.slug %}">{{ post.category.name }}</a>
+                </span>
+                {% if post.updated_at != post.created_at %}
+                {% endif %}
             </div>
-        </footer>
+        </div>
     </article>
 
-    <!-- Comments Section -->
-    <section class="comments-section">
-        <h3 class="comments-title">
-            <i class="fas fa-comments"></i>
-            Comentarios ({{ comments.count }})
-        </h3>
-
-        {% if comments %}
-        <div class="comments-list">
+    <!-- Comments Section with portfolio styling -->
+    <section class="comments-section-improved">
+        <h2 class="section-title">💬 Comentarios ({{ comments.count }})</h2>
+        
+        <div class="comments-container">
             {% for comment in comments %}
-            <div class="comment">
+            <div class="info-card comment-card">
                 <div class="comment-header">
-                    <div class="comment-author">
-                        <i class="fas fa-user-circle"></i>
-                        <strong>{{ comment.author }}</strong>
-                    </div>
-                    <div class="comment-date">
+                    <h3>👤 {{ comment.author }}</h3>
+                    <p style="color: var(--text-light);">
                         <i class="fas fa-clock"></i>
-                        <time>{{ comment.created_at|date:"d M Y - H:i" }}</time>
-                    </div>
+                        {{ comment.created_at|date:"d M Y - H:i" }}
+                    </p>
                 </div>
                 <div class="comment-body">
                     {{ comment.content|linebreaks }}
@@ -95,87 +62,45 @@
             </div>
             {% endfor %}
         </div>
-        {% else %}
-        <div class="no-comments">
-            <i class="fas fa-comment-slash"></i>
-            <p>Aún no hay comentarios. ¡Sé el primero en comentar!</p>
-        </div>
-        {% endif %}
 
-        <!-- Comment Form -->
-        <div class="comment-form-container">
-            <h4 class="form-title">
-                <i class="fas fa-pen"></i>
-                Deja un comentario
-            </h4>
-            <form method="post" class="comment-form">
-                {% csrf_token %}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="id_author">
-                            <i class="fas fa-user"></i>
-                            Nombre
-                        </label>
-                        <input type="text" name="author" id="id_author" required>
+        <!-- Comment Form with portfolio styling -->
+        <div class="contact-container" >
+            <div class="contact-info">
+                <form method="post" class="comment-form-improved">
+                    {% csrf_token %}
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h4>Nombre *</h4>
+                            <input type="text" name="author" required >
+                        </div>
+                        <div class="info-card">
+                            <h4>Email *</h4>
+                            <input type="email" name="email" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="id_email">
-                            <i class="fas fa-envelope"></i>
-                            Email
-                        </label>
-                        <input type="email" name="email" id="id_email" required>
+                    <div class="info-card" >
+                        <h4>Comentario *</h4>
+                        <textarea name="content" rows="5" required placeholder="Escribe crack..." ></textarea>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="id_content">
-                        <i class="fas fa-comment"></i>
-                        Comentario
-                    </label>
-                    <textarea name="content" id="id_content" rows="5" placeholder="Escribe tu comentario aquí..." required></textarea>
-                </div>
-                <button type="submit" class="submit-comment-btn">
-                    <i class="fas fa-paper-plane"></i>
-                    Publicar Comentario
-                </button>
-            </form>
+                    <div class="hero-buttons">
+                        <button type="submit" class="cta-button">
+                            <i class="fas fa-paper-plane"></i> Publicar Comentario
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </section>
 
-    <!-- Related Posts -->
-    {% if related_posts %}
-    <section class="related-posts">
-        <h3 class="related-title">
-            <i class="fas fa-link"></i>
-            Posts Relacionados
-        </h3>
-        <div class="related-grid">
-            {% for related_post in related_posts %}
-            <article class="related-card">
-                {% if related_post.featured_image %}
-                <div class="related-image">
-                    <img src="{{ related_post.featured_image.url }}" alt="{{ related_post.title }}">
-                </div>
-                {% else %}
-                <div class="related-image-placeholder">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                {% endif %}
-                
-                <div class="related-content">
-                    <h4>
-                        <a href="{% url 'blog:post_detail' related_post.slug %}">{{ related_post.title }}</a>
-                    </h4>
-                    <div class="related-meta">
-                        <span>
-                            <i class="fas fa-calendar"></i>
-                            {{ related_post.created_at|date:"d M Y" }}
-                        </span>
-                    </div>
-                </div>
-            </article>
-            {% endfor %}
+    <div style="text-align: center; margin-top: 4rem;">
+        <div class="hero-buttons">
+            <a href="{% url 'blog:index' %}" class="cta-button">
+                <i class="fas fa-arrow-left"></i> Todos los Posts
+            </a>
+            <a href="{% url 'core:home' %}" class="cta-button">
+                <i class="fas fa-home"></i> Inicio
+            </a>
         </div>
-    </section>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

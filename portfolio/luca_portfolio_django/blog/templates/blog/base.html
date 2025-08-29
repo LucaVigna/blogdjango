@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Blog{% endblock %} - Luca Vigna</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'core/styles.css' %}">
+    <meta content="{{ csrf_token }}" name="csrf-token"/>
 </head>
 <body>
     <!-- Header -->
@@ -20,71 +22,47 @@
                 <li><a href="{% url 'core:home' %}#sobre-mi">Sobre Mí</a></li>
                 <li><a href="{% url 'core:home' %}#proyectos">Proyectos</a></li>
                 <li><a href="{% url 'core:home' %}#contacto">Contacto</a></li>
-                <li><a href="{% url 'blog:index' %}" blog">Blog</a></li>
+                <li><a href="{% url 'blog:index' %}" class="{% if '/blog/' in request.path %}active-blog{% endif %}">Blog</a></li>
             </ul>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <i class="fas fa-moon"></i>
-            </button>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Tema</button>
         </nav>
     </header>
 
     <!-- Main Content -->
     <main>
-        <!-- Blog Hero Section -->
-        <section class="blog-hero">
-            <div class="blog-hero-content">
-                <h1>
-                    <i class="fas fa-blog"></i>
-                    {% block hero_title %}Mi Blog{% endblock %}
-                </h1>
-                <p>{% block hero_description %}Pensamientos, experiencias y conocimientos sobre desarrollo{% endblock %}</p>
-                
-                <!-- Breadcrumb -->
-                <div class="breadcrumb">
-                    <a href="{% url 'core:home' %}">
-                        <i class="fas fa-home"></i> Inicio
-                    </a>
-                    <span class="breadcrumb-separator">
-                        <i class="fas fa-chevron-right"></i>
-                    </span>
-                    {% block breadcrumb %}
-                    <span>Blog</span>
-                    {% endblock %}
-                </div>
-            </div>
-        </section>
-
-        <!-- Blog Content -->
-        <section class="blog-content">
+        <!-- Blog Content Section -->
+        <section class="blog-section" id="blog-content">
             {% block page_content %}{% endblock %}
         </section>
     </main>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Luca Vigna. Tengo derechos reservados jajaja.</p>
+        <p>© Es mi portafolio, tengo los derechos reservados jajaja.</p>
     </footer>
 
     <!-- Scripts -->
+    <script src="{% static 'core/script.js' %}"></script>
     <script>
+        // Enhanced theme toggle functionality
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', newTheme);
             
-            const icon = document.querySelector('.theme-toggle i');
-            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            const button = document.querySelector('.theme-toggle');
+            button.innerHTML = newTheme === 'dark' ? ' 🌗Tema' : ' 🌗Tema';
             
             localStorage.setItem('theme', newTheme);
         }
 
-        // Cargar tema guardado
+        // Load saved theme on page load
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            const icon = document.querySelector('.theme-toggle i');
-            icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            const button = document.querySelector('.theme-toggle');
+            button.innerHTML = savedTheme === 'dark' ? ' 🌗Tema' : '🌗 Tema';
         });
     </script>
 </body>
